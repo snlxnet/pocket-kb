@@ -1,6 +1,9 @@
-from bt import kb_demo
 import board
 import digitalio
+import keymap
+from adafruit_hid.keycode import Keycode
+import time
+import bt
 
 pins = [
     board.IO6, board.IO21, board.IO10, board.IO9,
@@ -37,6 +40,23 @@ def read_keys():
 
 while True:
     combo = read_keys()
-    print(combo[0:4])
-    print(combo[4:8])
+
+    matches = [meaning for meaning, keys in keymap.base.items() if keys == combo]
+    if len(matches) != 1:
+        print("unknown combo")
+        print(combo[0:4])
+        print(combo[4:8])
+        continue
+    if not bt.ble.connected:
+        print("not connected and memory is not implemented yet")
+
+    sym = matches[0]
+    if sym == "backspace":
+        bt.k.press(Keycode.BACKSPACE)
+    elif sym == "enter":
+        bt.k.press(Keycode.ENTER)
+    else:
+        bt.kl.write(sym)
+    bt.k.release_all()
+    
     # kb_demo()
