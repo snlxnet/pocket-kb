@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+	<head>
+		<title>visual keymap editor</title>
+		<link rel="stylesheet" href="/style.css">
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="color-scheme" content="light dark">
+	</head>
+	<body>
+    <main>
+      <div id="layers">
+        <button id="newlayer">+</button>
+      </div>
+      <div id="chords">
+      </div>
+      <button id="exportbtn">export</button>
+    </main>
+
+		<template id="chord">
+			<div class="chord">
+				<div class="keyboard">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+					<input type="checkbox">
+				</div>
+				<input placeholder="action" type="text"></input>
+			</div>
+		</template>
+
+		<script>
+			newLayer()
+
+			newlayer.addEventListener("click", newLayer)
+			exportbtn.addEventListener("click", save)
+
+			function newChord() {
+				const frag = document.importNode(chord.content, true)
+				const elem = frag.children[0]
+				const input = elem.querySelector(`input[type="text"]`)
+
+				elem.addEventListener("click", () => input.focus())
+
+				input.addEventListener("input", (event) => {
+					const isFirst = !event.target.parentElement.previousElementSibling
+					const isLast = !event.target.parentElement.nextElementSibling
+					const value = event.target.value
+
+					if (isLast && value) {
+						newChord()
+					}
+
+					if (!(isFirst && isLast) && !value) {
+						elem.remove()
+					}
+				})
+
+				let currentLayer = document.querySelector(".layer:not(.hidden)")
+				currentLayer.appendChild(elem)
+			}
+
+			function newLayer() {
+				const button = document.createElement("button")
+				const idx = layers.children.length
+				button.textContent = "L" + idx
+				button.addEventListener("click", () => showLayer(idx))
+				layers.insertBefore(button, newlayer)
+
+				const layer = document.createElement("div")
+				layer.classList.add("layer")
+				layer.classList.add("hidden")
+				chords.appendChild(layer)
+
+				showLayer(idx)
+				newChord()
+			}
+
+			function showLayer(desired) {
+				document.querySelectorAll(".layer").forEach((elem, idx) => {
+					if (idx + 1 === desired) {
+						elem.classList.remove("hidden")
+					} else {
+						elem.classList.add("hidden")
+					}
+				})
+			}
+
+			function save() {
+				const layers = Array.from(document.querySelectorAll(".layer"))
+
+				const data = layers.map(layer => (
+					Array.from(layer.children)
+						.map((chord) => {
+							const keys = chord.querySelectorAll('input[type="checkbox"]')
+							const action = chord.querySelector('input[placeholder="action"]')
+
+							return {
+								keys: Array.from(keys).map(input => input.checked),
+								action: action.value,
+							}
+						})
+						.filter((chord) => chord.action)
+				))
+
+				console.log(data)
+			}
+		</script>
+	</body>
+</html>
