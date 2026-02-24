@@ -84,9 +84,14 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-top: 1rem;
+  padding: 1rem;
 }
 
-.hidden {
+.layer.hidden {
   display: none;
+}
+
+#layers button:not(.hidden) {
+  background: var(--accent);
+  color: #181825;
 }

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<title>TITLE</title>
+		<link rel="stylesheet" href="https://snlx.net/new.css">
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="color-scheme" content="light dark">
+    <style>
+      iframe {
+        border: none;
+        border-radius: 1rem;
+      }
+    </style>
+	</head>
+	<body>
+    <main>
+      <h1>Iframe test</h1>
+      <iframe src="/" style="width: 100%"></iframe>
+    </main>
+		<script type="module" src="/client.js"></script>
+    <script>
+      document.querySelectorAll("iframe").forEach((frame) => {
+        frame.onload = () => {
+          resize()
+          createBadge()
+        }
+        frame.contentWindow.addEventListener("click", resizeTwice)
+        frame.contentWindow.addEventListener("keydown", resizeTwice)
+        frame.onload()
+
+        function resizeTwice() {
+          resize()
+          setTimeout(resize, 100)
+        }
+        
+        function resize() {
+          frame.style.height = frame.contentWindow.document.body.scrollHeight + "px"
+        }
+
+        function createBadge() {
+          document.getElementById("snlxnet-badge")?.remove()
+
+          const badge = document.createElement("button")
+          badge.textContent = "fullscreen"
+          badge.id = "site-badge"
+          badge.onclick = () => window.location = frame.src
+
+          frame.contentDocument.body.appendChild(badge)
+        }
+      })
+    </script>
+	</body>
+</html>

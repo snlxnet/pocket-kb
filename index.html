@@ -3,6 +3,7 @@
 	<head>
 		<title>visual keymap editor</title>
 		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="/badge.css">
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
 	<body>
     <main>
       <div id="layers">
-        <button id="newlayer">+</button>
+        <button id="newlayer" class="hidden">+</button>
       </div>
       <div id="chords">
       </div>
@@ -83,6 +84,14 @@
 
 			function showLayer(desired) {
 				document.querySelectorAll(".layer").forEach((elem, idx) => {
+					if (idx + 1 === desired) {
+						elem.classList.remove("hidden")
+					} else {
+						elem.classList.add("hidden")
+					}
+				})
+
+				Array.from(layers.children).forEach((elem, idx) => {
 					if (idx + 1 === desired) {
 						elem.classList.remove("hidden")
 					} else {

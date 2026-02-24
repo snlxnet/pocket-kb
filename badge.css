@@ -1,0 +1,15 @@
+#site-badge {
+  display: block;
+
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  
+  width: calc(1.62 * 3rem);
+  height: 3rem;
+
+  color: transparent;
+  border-radius: 0.62rem;
+  background-image: url("/badge.svg");
+  background-size: contain;
+}
