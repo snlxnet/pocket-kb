@@ -38,8 +38,13 @@ def read_keys():
             
         last_held = held
 
+flipped = False
+
+def flip(combo):
+    return combo[3::-1] + combo[:3:-1]
+
 while True:
-    combo = read_keys()
+    combo = flip(read_keys()) if flipped else read_keys()
 
     matches = [meaning for meaning, keys in keymap.base.items() if keys == combo]
     if len(matches) != 1:
@@ -55,8 +60,9 @@ while True:
         bt.k.press(Keycode.BACKSPACE)
     elif sym == "enter":
         bt.k.press(Keycode.ENTER)
+    elif sym == "flip":
+        flipped = not flipped
     else:
         bt.kl.write(sym)
     bt.k.release_all()
-    
-    # kb_demo()
+
